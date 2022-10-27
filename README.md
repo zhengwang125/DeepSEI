@@ -1,6 +1,6 @@
 # DeepSEI
 
-This is the implementation of our paper "On Inferring User Socioeconomic Status with Mobility Records".
+This is the implementation of our paper "On Inferring User Socioeconomic Status with Mobility Records" (BigData22).
 
 ## Requirements
 
