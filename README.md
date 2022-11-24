@@ -30,9 +30,9 @@ python Vor_prices.py
 ```
 
 ### Input data
-Run [`newsequence.py`](./newsequence.py) to get the input vectors and the labels, which are stored in the directory `user/input`. You can change the parameter cellsize here to gain a better performance.
+Run [`newSequence.py`](./newSequence.py) to get the input vectors and the labels, which are stored in the directory `user/input`. You can change the parameter cellsize here to gain a better performance.
 ```
-python newsequence.py
+python newSequence.py 
 ```
 
 ## Running Procedures
