@@ -24,7 +24,7 @@ Run [`features/indicators.py`](features/indicators.py), then the trajectories ar
 python indicators.py
 ```
 
-Run [`Vor_prices.py`](Vor_prices.py) to obtain the economy information (house price) of the whole Beijing city, which is adopted in [`newsequence.py`](./newsequence.py) to gain the label of each item in our set.
+Run [`Vor_prices.py`](Vor_prices.py) to obtain the economy information (house price) of the whole Beijing city, which is adopted in [`newSequence.py`](./newSequence.py) to gain the label of each item in our set.
 ```
 python Vor_prices.py
 ```
