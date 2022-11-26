@@ -193,13 +193,12 @@ def get_network(classes=2):
     # model.summary()
 
 def make_or_restore_model(classes=2):
-    checkpoint_dir = "./ckpt_static_"+str(classes)
+    checkpoint_dir = "./ckpt_deep_"+str(classes)
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
     checkpoints = [checkpoint_dir + "/" + name for name in os.listdir(checkpoint_dir)]
     if checkpoints:
         latest_checkpoint = max(checkpoints, key=os.path.getctime)
-        # latest_checkpoint = './ckpt_static_2/ckpt_2_0-loss=0.48'
         print("Restoring from", latest_checkpoint)
         return keras.models.load_model(latest_checkpoint)
     print("Creating a new model")
@@ -240,7 +239,7 @@ def train(x_train, y_train, x_test, y_test, classes=2):
     log_dir = "logs_static_"+str(classes)+"/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
-    checkpoint_dir = "./ckpt_static_"+str(classes)
+    checkpoint_dir = "./ckpt_deep_"+str(classes)
     # weight_for_0 = (1 / len(x_train)+len(x_test)) * (len(x_train)+len(x_test) / 2.0)
     # weight_for_1 = (1 / 33) * (len(x_train)+len(x_test) / 2.0)
     #
