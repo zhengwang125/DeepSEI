@@ -30,7 +30,7 @@ python Vor_prices.py
 ```
 
 ### Input data
-Run [`newSequence.py`](./newSequence.py) to get the input vectors and the labels, which are stored in the directory `user/input`. You can change the parameter cellsize here to gain a better performance.
+Run [`get_inputs.py`](./get_inputs.py) to get the input vectors and the labels, which are stored in the directory `user/input`. You can change the parameter cellsize here to gain a better performance.
 ```
 python newSequence.py 
 ```
@@ -38,20 +38,20 @@ python newSequence.py
 ## Running Procedures
 
 ### Pre-training
-Run [`radius_pretrain.py`](radius_pretrain.py) and [`entropy_pretrain.py`](entropy_pretrain.py) to pretrain the embedding vectors with Skip-gram model, and the checkpoints are stored in `./radius_pre` and `./entropy_pre`, which will be loaded by the static network.
+Run [`radius_pretrain.py`](radius_pretrain.py) and [`entropy_pretrain.py`](entropy_pretrain.py) to pretrain the embedding vectors with Skip-gram model, and the checkpoints are stored in `./radius_pre` and `./entropy_pre`, which will be loaded by the static network. The directories of `radius_pre` and `entropy_pre` will be generated automatically by running this script.
 
-Run [`static_network.py`](static_network.py) to pretrain the static network, and the checkpoints are stored in `./ckpt_static_i` (i is the number of classes of the label ranging from 2 to 5) , which will be loaded by DeepSEI model.
+Run [`Deep_net.py`](Deep_net.py) to pretrain the static network, and the checkpoints are stored in `./ckpt_deep_i` (i is the number of classes of the label ranging from 2 to 5) , which will be loaded by DeepSEI model. The directory of `ckpt_deep_i` will also be generated automatically.
 ```
 python radius_pretrain.py
 python entropy_pretrain.py
-python static_network.py
+python Deep_net.py
 ```
 
 ### Classification
-Run [`LSTM_KDD.py`](LSTM_KDD.py) to train and test our classification model: DeepSEI. The generated models will be stored in the folder `./ckpt_i` (i is the number of classes of the label ranging from 2 to 5) automatically, and you can pick one model with the best performance on the validation data as your model from them. The parameter of spatiality, temporality and activity granularity here. More importantly, 
+Run [`DeepSEI.py`](DeepSEI.py) to train and test our classification model: DeepSEI. The generated models will be stored in the folder `./ckpt_i` (i is the number of classes of the label ranging from 2 to 5) automatically, and you can pick one model with the best performance on the validation data as your model from them. The parameter of spatiality, temporality and activity granularity here. More importantly, 
 the number of classes can be changed here to perform different tasks. The history of the training process is recorded in the directory `./logs`, which can be displayed in TensorBoard. In addition, the variable `history` in function `train` also records the training process of each epoch (e.g., loss, accuracy, precision and recall). The training time and f1 score of each epoch are added in callback functions, and later printed.
 ```
-python LSTM_KDD.py
+python DeepSEI.py
 ```
 
 ### Clustering
