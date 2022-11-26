@@ -24,7 +24,7 @@ Run [`features/indicators.py`](features/indicators.py), then the trajectories ar
 python indicators.py
 ```
 
-Run [`Vor_prices.py`](Vor_prices.py) to obtain the economy information (house price) of the whole Beijing city, which is adopted in [`newSequence.py`](./newSequence.py) to gain the label of each item in our set.
+Run [`Vor_prices.py`](Vor_prices.py) to obtain the economy information (house price) of the whole Beijing city, which is adopted in [`get_inputs.py`](./get_inputs.py) to gain the label of each item in our set.
 ```
 python Vor_prices.py
 ```
@@ -32,7 +32,7 @@ python Vor_prices.py
 ### Input data
 Run [`get_inputs.py`](./get_inputs.py) to get the input vectors and the labels, which are stored in the directory `user/input`. You can change the parameter cellsize here to gain a better performance.
 ```
-python newSequence.py 
+python get_inputs.py 
 ```
 
 ## Running Procedures
