@@ -38,9 +38,9 @@ python get_inputs.py
 ## Running Procedures
 
 ### Pre-training
-Run [`radius_pretrain.py`](radius_pretrain.py) and [`entropy_pretrain.py`](entropy_pretrain.py) to pretrain the embedding vectors with Skip-gram model, and the checkpoints are stored in `./radius_pre` and `./entropy_pre`, which will be loaded by the static network. The directories of `radius_pre` and `entropy_pre` will be generated automatically by running this script.
+Run [`radius_pretrain.py`](radius_pretrain.py) and [`entropy_pretrain.py`](entropy_pretrain.py) to pretrain the embedding vectors with Skip-gram model, and the checkpoints are stored in `./radius_pre` and `./entropy_pre`, which will be loaded by the deep network. The directories of `radius_pre` and `entropy_pre` will be generated automatically by running this script.
 
-Run [`Deep_net.py`](Deep_net.py) to pretrain the static network, and the checkpoints are stored in `./ckpt_deep_i` (i is the number of classes of the label ranging from 2 to 5) , which will be loaded by DeepSEI model. The directory of `ckpt_deep_i` will also be generated automatically.
+Run [`Deep_net.py`](Deep_net.py) to pretrain the deep network, and the checkpoints are stored in `./ckpt_deep_i` (i is the number of classes of the label ranging from 2 to 5) , which will be loaded by DeepSEI model. The directory of `ckpt_deep_i` will also be generated automatically.
 ```
 python radius_pretrain.py
 python entropy_pretrain.py
