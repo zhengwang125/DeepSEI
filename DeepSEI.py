@@ -22,7 +22,8 @@ global activity_entropy
 global travel_diversity
 global labels
 
-def pickle_input(interval=0.5, cellsize=100, classes=2):
+CLASSES = 2
+def pickle_input(interval=0.5, cellsize=100, classes=CLASSES):
     loc_input = pickle.load(open('./user/inputs/loc_input_100', 'rb'), encoding='bytes')
     time_input = pickle.load(open('./user/inputs/time_input', 'rb'), encoding='bytes')
     activity_input = pickle.load(open('./user/inputs/activity_input', 'rb'), encoding='bytes')
@@ -224,18 +225,17 @@ def get_lstm_i(loc_embedding, time_embedding, activity_embedding, lstm_base, lst
 
     return state
 
-def get_deep_model(classes=2):
-    latest_checkpoint = './ckpt_deep_'+str(classes)+'/ckpt_2-loss=0.61'
+def get_deep_model(classes=CLASSES):
+    #latest_checkpoint = './ckpt_deep_'+str(classes)+'/ckpt_2-loss=0.61'
+    latest_checkpoint = max(checkpoints, key=os.path.getctime)
     print('Restoring pretrain model from', latest_checkpoint)
     return keras.models.load_model(latest_checkpoint)
 
-def get_model(classes=2):
+def get_model(classes=CLASSES):
     loc_input = keras.Input(shape=(None,), name='loc_input_1')
     time_input = keras.Input(shape=(None,), name='time_input_1')
     activity_input = keras.Input(shape=(None,), name='activity_input_1')
-    # region_embedding = keras.Input(shape=(None, 32), name='region_embedding')
-
-    # submodel = get_submodel()
+    
     loc_embedding = layers.Embedding(8877, 32, name='loc_embedding')
     time_embedding = layers.Embedding(49, 32, name='time_embedding')
     activity_embedding = layers.Embedding(12, 32, name='activity_embedding')
@@ -250,13 +250,6 @@ def get_model(classes=2):
     input.append(loc_input)
     input.append(time_input)
     input.append(activity_input)
-
-    # loc_input_last = keras.Input(shape=(None,), name='loc_input_1_last')
-    # time_input_last = keras.Input(shape=(None,), name='time_input_1_last')
-    # activity_input_last = keras.Input(shape=(None,), name='activity_input_1_last')
-    # input.append(loc_input_last)
-    # input.append(time_input_last)
-    # input.append(activity_input_last)
 
     # there are 7 days in one week, lstm_2 ~ lstm_7
     for i in range(2,8):
@@ -293,8 +286,6 @@ def get_model(classes=2):
     activity_entropy_embedding = entropy_embedding(activity_entropy_input)
     travel_diversity_embedding = entropy_embedding(travel_diversity_input)
 
-    # reshape_home = layers.Reshape((-1,), name='reshape_home')(home_embedding)
-    # reshape_com = layers.Reshape((-1,), name='reshape_com')(com_embedding)
     reshape_activity_entropy = layers.Reshape((-1,), name='reshape_activity_entropy')(activity_entropy_embedding)
     reshape_travel_diversity = layers.Reshape((-1,), name='reshape_travel_diversity')(travel_diversity_embedding)
     reshape_radius = layers.Reshape((-1,), name='reshape_radius')(radius_embedding)
@@ -313,7 +304,7 @@ def get_model(classes=2):
     model = keras.Model(input, pred)
     return model
 
-def make_or_restore_model(classes=2):
+def make_or_restore_model(classes=CLASSES):
     checkpoint_dir = "./ckpt_"+str(classes)
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
@@ -329,30 +320,27 @@ def make_or_restore_model(classes=2):
 def get_F1_score(y_true, y_pred):
     a = keras.metrics.reca
 
-def train(x_train, y_train, x_test, y_test, classes=2):
+def train(x_train, y_train, x_test, y_test, classes=CLASSES):
     model = make_or_restore_model(classes)
     model.summary()
     if classes == 2:
         model.compile(optimizer=keras.optimizers.Adam(1e-3),
                       loss='binary_crossentropy',
                       metrics=[keras.metrics.BinaryAccuracy(name='binary_accuracy'), keras.metrics.Recall(name='recall'),
-                               keras.metrics.Precision(name='Precision')]  # 评价指标有准确率和PRC-AUC
+                               keras.metrics.Precision(name='Precision')]  # accuracy and PRC-AUC as metrics
                       )
     else:
         model.compile(optimizer=keras.optimizers.Adam(1e-4),
                       loss='categorical_crossentropy',
                       metrics=[keras.metrics.CategoricalAccuracy(name='accuracy'),
                                keras.metrics.Recall(name='recall'),
-                               keras.metrics.Precision(name='Precision')]  # 评价指标有准确率和PRC-AUC
+                               keras.metrics.Precision(name='Precision')]  # accuracy and PRC-AUC as metrics
                       )
     log_dir = "logs_"+str(classes)+"/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
 
     checkpoint_dir = "./ckpt_"+str(classes)
-    # weight_for_0 = (1 / len(x_train)+len(x_test)) * (len(x_train)+len(x_test) / 2.0)
-    # weight_for_1 = (1 / 33) * (len(x_train)+len(x_test) / 2.0)
-    #
-    # class_weight = {0: weight_for_0, 1: weight_for_1}
+
     time_callback = TimeHistory()
     history = model.fit(x=x_train,
               y=y_train,
@@ -365,7 +353,6 @@ def train(x_train, y_train, x_test, y_test, classes=2):
                          keras.callbacks.ModelCheckpoint(
                              filepath=checkpoint_dir + "/ckpt_2-loss={loss:.2f}", save_freq=100
                          )]
-              # class_weight=class_weight
               )
     print('epochs:', time_callback.times)
     print('total:', time_callback.totaltime)
@@ -395,8 +382,12 @@ def train(x_train, y_train, x_test, y_test, classes=2):
             val_f1.append(2 * i * j / (i + j))
     print('val_f1', val_f1)
     # print(history)
+    
+def classification(x):
+    model = make_or_restore_model()
+    
         
 
-pickle_input(classes=2)
+pickle_input(classes=CLASSES)
 get_train(train_ratio=0.7)
 train(x_train,y_train,x_val,y_val, classes=2)
