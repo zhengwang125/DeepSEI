@@ -22,8 +22,8 @@ import pandas as pd
 import os
 from tool import *
 
-mins = 60.0
-cellsize = 100
+MINS = 60.0
+CELLSIZE = 100
 
 def usersum():
     filenames = os.listdir('Data')
@@ -378,7 +378,7 @@ def get_week_feature():
             week.append(str(w[0]) + str(w[1]))
         weekset = list(set(week))
         
-        os.makedirs('../user/weeks'+str(mins)[:2]+'/' + data_path)
+        os.makedirs('../user/weeks'+str(MINS)[:2]+'/' + data_path)
         tdf['week'] = week
         for j in weekset:
             home_lat = []
@@ -392,7 +392,7 @@ def get_week_feature():
             ctdf = Traj_compression(ftdf)
             if len(ctdf)<=0:
                 continue
-            stdf = Stop_detection(ctdf, minutes_for_a_stop=mins)
+            stdf = Stop_detection(ctdf, minutes_for_a_stop=MINS)
             if len(stdf) <= 1:
                 continue
 
@@ -407,7 +407,7 @@ def get_week_feature():
             # get mobility indicators -> users*(uid, indicator_value)
             rg_df = Radius_of_gyration(t)  # LMI
             # rg_df['uid'] = [i]
-            path_t = '../user/weeks'+str(mins)[:2]+ '/' + data_path+'/'+str(weekset.index(j)+1)+'/'
+            path_t = '../user/weeks'+str(MINS)[:2]+ '/' + data_path+'/'+str(weekset.index(j)+1)+'/'
             os.makedirs(path_t)
             pickle.dump(stdf, open(path_t+'stdf', 'wb'), protocol=2)
             # stdf = pd.concat([stdf,Stop_detection(ctdf)])
@@ -433,59 +433,59 @@ def get_week_feature():
             features_t['company_lng'] = company_lng
             pickle.dump(features_t, open(path_t + 'features', 'wb'), protocol=2)
             features = pd.concat([features, features_t])
-    pickle.dump(features, open('../user/weeks'+str(mins)[:2]+'/'+'features', 'wb'), protocol=2)
+    pickle.dump(features, open('../user/weeks'+str(MINS)[:2]+'/'+'features', 'wb'), protocol=2)
 
 
 def sum_feature():
     feature = pd.DataFrame()
-    userdirs = os.listdir('../user/weeks'+str(mins)[:2])
+    userdirs = os.listdir('../user/weeks'+str(MINS)[:2])
     for u in userdirs:
-        if os.path.isdir('../user/weeks'+str(mins)[:2]+'/'+u):
-            weekdirs = os.listdir('../user/weeks'+str(mins)[:2]+'/'+u)
+        if os.path.isdir('../user/weeks'+str(MINS)[:2]+'/'+u):
+            weekdirs = os.listdir('../user/weeks'+str(MINS)[:2]+'/'+u)
             for w in weekdirs:
-                f = pickle.load(open('../user/weeks'+str(mins)[:2]+'/'+u+'/'+w+'/features', 'rb'), encoding='bytes')
+                f = pickle.load(open('../user/weeks'+str(MINS)[:2]+'/'+u+'/'+w+'/features', 'rb'), encoding='bytes')
                 feature = pd.concat([feature, f])
     pickle.dump(feature, open('../user/features2', 'wb'), protocol=2)
 
 def sum_stdf():
-    userdirs = os.listdir('../user/weeks'+str(mins)[:2]+'/')
+    userdirs = os.listdir('../user/weeks'+str(MINS)[:2]+'/')
     stdf_all = pd.DataFrame()
     for u in userdirs:
-        if os.path.isdir('../user/weeks'+str(mins)[:2]+'/' + u):
-            weekdirs = os.listdir('../user/weeks'+str(mins)[:2]+'/' + u)
+        if os.path.isdir('../user/weeks'+str(MINS)[:2]+'/' + u):
+            weekdirs = os.listdir('../user/weeks'+str(MINS)[:2]+'/' + u)
             for w in weekdirs:
-                stdf = pickle.load(open('../user/weeks'+str(mins)[:2]+'/' + u + '/' + w + '/stdf', 'rb'), encoding='bytes')
+                stdf = pickle.load(open('../user/weeks'+str(MINS)[:2]+'/' + u + '/' + w + '/stdf', 'rb'), encoding='bytes')
                 t = u+'-'+w
                 uids = [t for i in range(len(stdf))]
                 stdf['uid'] = uids
-                pickle.dump(stdf, open('../user/weeks'+str(mins)[:2]+'/' + u + '/' + w + '/stdf', 'wb'), protocol=2)
+                pickle.dump(stdf, open('../user/weeks'+str(MINS)[:2]+'/' + u + '/' + w + '/stdf', 'wb'), protocol=2)
                 stdf_all = pd.concat([stdf_all, stdf])
-    pickle.dump(stdf_all, open('../user/weeks'+str(mins)[:2]+'/'+'stdf_all', 'wb'), protocol=2)
+    pickle.dump(stdf_all, open('../user/weeks'+str(MINS)[:2]+'/'+'stdf_all', 'wb'), protocol=2)
 
 def filter_by_home():
-    features = pickle.load(open('../user/weeks'+str(mins)[:2]+'/'+'features', 'rb'), encoding='bytes')
+    features = pickle.load(open('../user/weeks'+str(MINS)[:2]+'/'+'features', 'rb'), encoding='bytes')
     features_in_bj = features[(features['home_lat']>=39.4)&(features['home_lat']<=41.1)|
                         (features['home_lng']>=115.4)&(features['home_lng']<=117.5)]
     # uids = features_in_bj['uid']
     print(len(features_in_bj))
     print(len(features))
-    pickle.dump(features_in_bj, open('../user/weeks'+str(mins)[:2]+'/'+'features_in_bj', 'wb'), protocol=2)
+    pickle.dump(features_in_bj, open('../user/weeks'+str(MINS)[:2]+'/'+'features_in_bj', 'wb'), protocol=2)
     # print(uids)
 
-def get_loc_dict(cellsize=100):
+def get_loc_dict(cellsize=CELLSIZE):
     loc_set = set()
-    stdf_all = pickle.load(open('../user/weeks'+str(mins)[:2]+'/'+'stdf_all', 'rb'), encoding='bytes')
-    features_in_bj = pickle.load(open('../user/weeks'+str(mins)[:2]+'/'+'features_in_bj', 'rb'), encoding='bytes')
+    stdf_all = pickle.load(open('../user/weeks'+str(MINS)[:2]+'/'+'stdf_all', 'rb'), encoding='bytes')
+    features_in_bj = pickle.load(open('../user/weeks'+str(MINS)[:2]+'/'+'features_in_bj', 'rb'), encoding='bytes')
     uidlist = list(features_in_bj['uid'])
     stdf_all = stdf_all[stdf_all['uid'].isin(uidlist)]
-    pickle.dump(stdf_all, open('../user/weeks'+str(mins)[:2]+'/'+'stdf_all', 'wb'), protocol=2)
+    pickle.dump(stdf_all, open('../user/weeks'+str(MINS)[:2]+'/'+'stdf_all', 'wb'), protocol=2)
     for index, row in stdf_all.iterrows():
         location = get_loc(row['lng'], row['lat'], cellsize)
         loc_set.add(location)
     index = [i for i in range(1, len(loc_set)+1)]
     loc_dict = dict(zip(loc_set, index))
     print(len(loc_dict))
-    #pickle.dump(loc_dict, open('../user/weeks'+str(mins)[:2]+'/'+'loc_dict'+str(cellsize)+'m', 'wb'), protocol=2)
+    #pickle.dump(loc_dict, open('../user/weeks'+str(MINS)[:2]+'/'+'loc_dict'+str(cellsize)+'m', 'wb'), protocol=2)
 
 
 
@@ -495,4 +495,4 @@ get_week_feature()
 # sum_feature()
 sum_stdf()
 filter_by_home()
-get_loc_dict(100)
+get_loc_dict(CELLSIZE)
