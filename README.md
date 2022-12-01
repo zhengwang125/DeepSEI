@@ -19,7 +19,7 @@ pip install scikit-mobility
 Download & unzip the dataset [Geolife](http://research.microsoft.com/en-us/downloads/b16d359d-d164-469e-9fd4-daa38f2b2e13/) to the folder `./Data`. 
 
 ### Indicators
-Run [`features/indicators.py`](features/indicators.py), then the trajectories are separated by user number and stored into the directory `./user` (e.g., `./user/000`); additionally, the basic indicators of the users' features as well as their stay points are obtained; then the stay points are also seperated weekly with the format "user/weeks/userno" (e.g., `user/weeks/000`) while the features are summed up and dumped in a binary file with the name `user/weeks/feature_in_bj`.
+Run [`features/indicators.py`](features/indicators.py), then the trajectories are separated by user number and stored into the directory `./user` (e.g., `./user/000`); additionally, the basic indicators of the users' features as well as their stay points are obtained; then the stay points are also seperated weekly with the format "user/weeks/userno" (e.g., `user/weeks/000`) while the features are summed up and dumped in a binary file with the name `user/weeks/feature_in_bj`. You can change the parameter stay point duration here to gain a better performance.
 ```
 python indicators.py
 ```
