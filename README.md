@@ -48,8 +48,7 @@ python deep_net.py
 ```
 
 ### Classification
-Run [`DeepSEI.py`](DeepSEI.py) to train and test our classification model: DeepSEI. The generated models will be stored in the folder `./ckpt_i` (i is the number of classes of the label ranging from 2 to 5) automatically, and you can pick one model with the best performance on the validation data as your model from them. The parameter of spatiality, temporality and activity granularity here. More importantly, 
-the number of classes can be changed here to perform different tasks. The history of the training process is recorded in the directory `./logs`, which can be displayed in TensorBoard. In addition, the variable `history` in function `train` also records the training process of each epoch (e.g., loss, accuracy, precision and recall). The training time and f1 score of each epoch are added in callback functions, and later printed.
+Run [`DeepSEI.py`](DeepSEI.py) to train and test our classification model: DeepSEI. The generated models will be stored in the folder `./ckpt_i` (i is the number of classes of the label ranging from 2 to 5) automatically, and you can pick one model with the best performance on the validation data as your model from them. More importantly, the number of classes can be changed here to perform different tasks. The history of the training process is recorded in the directory `./logs`, which can be displayed in TensorBoard. In addition, the variable `history` in function `train` also records the training process of each epoch (e.g., loss, accuracy, precision and recall). The training time and f1 score of each epoch are added in callback functions, and later printed.
 ```
 python DeepSEI.py
 ```
