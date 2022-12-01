@@ -384,7 +384,8 @@ def train(x_train, y_train, x_test, y_test, classes=CLASSES):
     # print(history)
     
 def classification(x):
-    model = make_or_restore_model()
+    model = make_or_restore_model(classes=CLASSES)
+    return model.predict(x)
     
         
 
