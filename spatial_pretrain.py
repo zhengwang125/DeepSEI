@@ -25,7 +25,7 @@ def make_or_restore_model():
     # Either restore the latest model, or create a fresh one
     # if there is no checkpoint available.
     # checkpoint_dir = "./ckpt_2_0"
-    checkpoint_path = "../KDD2022/spatial_pre/cp-{epoch:04d}.ckpt_2_0"
+    checkpoint_path = "../spatial_pre/cp-{epoch:04d}.ckpt_2_0"
     checkpoint_dir = os.path.dirname(checkpoint_path)
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
@@ -51,7 +51,7 @@ def train(X, Y):
     log_dir = "logs2/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
     tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
     # checkpoint_dir = "./ckpt_2_0"
-    checkpoint_path = "../KDD2022/spatial_pre/cp-loss{loss:.2f}.ckpt_2_0"
+    checkpoint_path = "../spatial_pre/cp-loss{loss:.2f}.ckpt_2_0"
     checkpoint_dir = os.path.dirname(checkpoint_path)
     history = model.fit(x=X,
                         y=Y,
