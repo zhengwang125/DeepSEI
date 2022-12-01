@@ -224,8 +224,8 @@ def get_lstm_i(loc_embedding, time_embedding, activity_embedding, lstm_base, lst
 
     return state
 
-def get_consistent_model(classes=2):
-    latest_checkpoint = './ckpt_static_'+str(classes)+'/ckpt_2-loss=0.61'
+def get_deep_model(classes=2):
+    latest_checkpoint = './ckpt_deep_'+str(classes)+'/ckpt_2-loss=0.61'
     print('Restoring pretrain model from', latest_checkpoint)
     return keras.models.load_model(latest_checkpoint)
 
@@ -275,22 +275,16 @@ def get_model(classes=2):
 
     state = state[0]
 
-    # static sub network
-    # home_input = layers.Input(shape=(1,), name='home_input')
-    # com_input = layers.Input(shape=(1,), name='com_input')
+    # deep net
     radius_input = layers.Input(shape=(1,), name='radius_input')
     activity_entropy_input = layers.Input(shape=(1,), name='activity_entropy_input')
     travel_diversity_input = layers.Input(shape=(1,), name='travel_diversity_input')
     input.extend([radius_input, activity_entropy_input, travel_diversity_input])
 
-    pretrain_model = get_consistent_model(classes)
+    pretrain_model = get_deep_model(classes)
 
-    # home_embedding = pretrain_model.get_layer('home_embedding')(home_input)
-    # com_embedding = pretrain_model.get_layer('com_embedding')(com_input)
-    # home_embedding.trainable = False
-    # com_embedding.trainable = False
     radius_embedding = pretrain_model.get_layer('radius_embedding')
-    # radius_embedding.trainable = False
+
 
     entropy_embedding = pretrain_model.get_layer('entropy_embedding')
     # entropy_embedding.trainable = False
@@ -401,54 +395,8 @@ def train(x_train, y_train, x_test, y_test, classes=2):
             val_f1.append(2 * i * j / (i + j))
     print('val_f1', val_f1)
     # print(history)
-
-def plot_activity():
-    d_train = dict()
-    d_val = dict()
-    global x_train
-    global x_val
-    for n in range(2, 2+7*3, 3):
-        activity_train = x_train[n]
-        activity_val = x_val[n]
-        for i in activity_train:
-            for j in i:
-                if j == 0:
-                    break
-                if j in d_train.keys():
-                    d_train[j] += 1
-                else:
-                    d_train[j] = 1
         
-        for i in activity_val:
-            for j in i:
-                if j == 0:
-                    break
-                if j in d_val.keys():
-                    d_val[j] += 1
-                else:
-                    d_val[j] = 1
-
-    train_list = []
-    val_list = []
-    for i in range(11):
-        i += 1
-        train_list.append(d_train[i])
-        val_list.append(d_val[i])
-    sum_train = sum(train_list)
-    sun_val = sum(val_list)
-    for i in range(11):
-        train_list[i] /= sum_train
-        val_list[i] /= sun_val
-    print(d_train)
-    print(d_val)
-    print(train_list)
-    print(val_list)
-        
-
 
 pickle_input(classes=2)
 get_train(train_ratio=0.7)
-# plot_activity()
-# print(x_train[0])
-# print(x_val[3])
 train(x_train,y_train,x_val,y_val, classes=2)
