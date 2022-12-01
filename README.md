@@ -47,11 +47,13 @@ python temporal_activity_pretrain.py
 python deep_net.py
 ```
 
-### Training and Classification
-Run [`DeepSEI.py`](DeepSEI.py) to train and test our classification model: DeepSEI. The generated models will be stored in the folder `./ckpt_i` (i is the number of classes of the label ranging from 2 to 5) automatically, and you can pick one model with the best performance on the validation data as your model from them. More importantly, the number of classes can be changed here to perform different tasks. The history of the training process is recorded in the directory `./logs`, which can be displayed in TensorBoard. In addition, the variable `history` in function `train` also records the training process of each epoch (e.g., loss, accuracy, precision and recall). The training time and f1 score of each epoch are added in callback functions, and later printed.
+### Training
+Run [`DeepSEI.py`](DeepSEI.py) to train and test our classification model: DeepSEI. The checkpoints of generated models will be stored in the folder `./ckpt_i` (i is the number of classes of the label ranging from 2 to 5) automatically, and the checkpoints of each epoch are stored with the loss values as their filenames. The number of classes can be changed here to perform different tasks. The history of the training process is recorded in the directory `./logs`, which can be displayed in TensorBoard. In addition, the variable `history` in function `train` also records the training process of each epoch (e.g., loss, accuracy, precision and recall). The training time and f1 score of each epoch are added in callback functions, and later printed.
 ```
 python DeepSEI.py
 ```
+### Classification
+The models are trained and stored in the Training process, and can be loaded by the function `make_or_restore_model()` in the script [`DeepSEI.py`](DeepSEI.py). This function adopts the latest created checkpoints to restore the model for classification, and you may also pick one with the best performance on the validation data (e.g., the model with the lowest loss) as your model from them. We provide a function `classification(x)` in the script [`DeepSEI.py`](DeepSEI.py) with x as the input data, which loads the model and outputs the classification results.
 
 ### Clustering
 Run [`Clustering.py`](Clustering.py) to do the task of clustering. The inputs of our clustering model are the output vectors of one hidden layers in the classification model, so the clustering task has to be run after obtaining the checkpoints of classification model. The number of clusters is also changable according to the classification model ranging from 2 to 5.
