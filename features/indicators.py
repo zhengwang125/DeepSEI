@@ -22,8 +22,8 @@ import pandas as pd
 import os
 from tool import *
 
-city = 'chengdu'
 mins = 60.0
+cellsize = 100
 
 def usersum():
     filenames = os.listdir('Data')
