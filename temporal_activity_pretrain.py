@@ -25,7 +25,7 @@ def make_or_restore_model():
     # Either restore the latest model, or create a fresh one
     # if there is no checkpoint available.
     # checkpoint_dir = "./ckpt_2_0"
-    checkpoint_path = "../KDD2022/entropy_pre/cp-{epoch:04d}.ckpt_2_0"
+    checkpoint_path = "../temporal_activity_pre/cp-{epoch:04d}.ckpt_2_0"
     checkpoint_dir = os.path.dirname(checkpoint_path)
     if not os.path.exists(checkpoint_dir):
         os.makedirs(checkpoint_dir)
