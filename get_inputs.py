@@ -7,6 +7,7 @@ import requests, json
 from multiprocessing.dummy import Pool as ThreadPool
 from rtree.index import Index
 
+CELLSIZE = 100
 def usersum():
     filenames = os.listdir('Data')
     for f in filenames:
@@ -66,7 +67,7 @@ def get_map_Activity(lng, lat):
         return 1
     if is_home(lng, lat, home_lng, home_lat):
         return 2
-    cellsize = 100
+    cellsize = CELLSIZE
     loc = get_loc(lng, lat, cellsize)
     neighbours = get_neighbour(loc, cellsize)
     act_list = np.zeros(9)
@@ -78,7 +79,7 @@ def get_map_Activity(lng, lat):
 def get_map_Activity_wrap(args):
     return get_map_Activity(*args)
 
-def generate_sequence(cellsize=100):
+def generate_sequence(cellsize=CELLSIZE):
     features_in_bj = pickle.load(open('./user/weeks/features_in_bj', 'rb'), encoding='bytes')
     loc_dict = pickle.load(open('./user/loc_dict'+str(cellsize)+'m', 'rb'), encoding='bytes')
     uidlist = list(features_in_bj['uid'])
@@ -109,7 +110,7 @@ def generate_sequence(cellsize=100):
         sequencelist.append(week)
     pickle.dump(sequencelist, open('./user/sequencelist', 'wb'), protocol=2)
 
-def append_activity(cellsize=100):
+def append_activity(cellsize=CELLSIZE):
     features_in_bj = pickle.load(open('./user/weeks/features_in_bj', 'rb'), encoding='bytes')
     # loc_dict = pickle.load(open('./user/loc_dict'+str(cellsize)+'m', 'rb'), encoding='bytes')
     uidlist = list(features_in_bj['uid'])
@@ -139,7 +140,7 @@ def append_activity(cellsize=100):
         pool.join()
         pickle.dump(stdf, open('./user/weeks/' + u + '/' + w + '/stdf', 'wb'), protocol=2)
 
-def get_lstm_input(cellsize=100):
+def get_lstm_input(cellsize=CELLSIZE):
     loc_input = []
     time_input = []
     activity_input = []
@@ -169,7 +170,7 @@ def get_lstm_input(cellsize=100):
     print(time_input)
     print(activity_input)
 
-def get_bp_input(cellsize = 100):
+def get_bp_input(cellsize = CELLSIZE):
     features_in_bj = pickle.load(open('./user/weeks/features_in_bj', 'rb'), encoding='bytes')
 
     # com = []
